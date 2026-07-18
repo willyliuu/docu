@@ -88,7 +88,7 @@ export default async function Home({
           </Link>
         </div>
       ) : (
-        <NoteGrid notes={notes.map((note: any) => ({
+        <NoteGrid notes={notes.map((note: { id: string; title: string; content: string; updated_at: Date; category: { name: string; color: string } | null }) => ({
           id: note.id,
           title: note.title,
           contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
