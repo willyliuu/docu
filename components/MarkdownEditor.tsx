@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { ClassAttributes, HTMLAttributes } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -11,6 +11,8 @@ interface MarkdownEditorProps {
   value: string;
   onChange: (value: string) => void;
 }
+
+type CodeProps = ClassAttributes<HTMLElement> & HTMLAttributes<HTMLElement> & { inline?: boolean; node?: unknown };
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange }) => {
   return (
@@ -42,8 +44,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange 
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-            code({ node, inline, className, children, ...props }: any) {
+            code({ inline, className, children, ...props }: CodeProps) {
               const match = /language-(\w+)/.exec(className || '');
               if (!inline && match) {
                 if (match[1] === 'mermaid') {
@@ -51,12 +52,10 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange 
                 }
                 return (
                   <SyntaxHighlighter
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    style={vscDarkPlus as any}
+                    style={vscDarkPlus as { [key: string]: React.CSSProperties }}
                     language={match[1]}
                     PreTag="div"
                     customStyle={{ margin: 0, borderRadius: '4px', background: 'var(--bg-alt)' }}
-                    {...props}
                   >
                     {String(children).replace(/\n$/, '')}
                   </SyntaxHighlighter>

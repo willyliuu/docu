@@ -11,6 +11,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Mermaid } from '@/components/Mermaid';
 
+type CodeProps = React.ClassAttributes<HTMLElement> & React.HTMLAttributes<HTMLElement> & { inline?: boolean; node?: unknown };
+
 export default async function ViewNotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await auth();
@@ -64,8 +66,7 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-              code({ node, inline, className, children, ...props }: any) {
+              code({ inline, className, children, ...props }: CodeProps) {
                 const match = /language-(\w+)/.exec(className || '');
                 if (!inline && match) {
                   if (match[1] === 'mermaid') {
@@ -73,12 +74,10 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
                   }
                   return (
                     <SyntaxHighlighter
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      style={vscDarkPlus as any}
+                      style={vscDarkPlus as { [key: string]: React.CSSProperties }}
                       language={match[1]}
                       PreTag="div"
                       customStyle={{ margin: '1em 0', borderRadius: '8px', background: 'var(--bg-alt)' }}
-                      {...props}
                     >
                       {String(children).replace(/\n$/, '')}
                     </SyntaxHighlighter>
