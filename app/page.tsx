@@ -1,6 +1,5 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { NoteCard } from '@/components/NoteCard';
 import { NoteGrid } from '@/components/NoteGrid';
 import { SearchFilterBar } from '@/components/SearchFilterBar';
 import Link from 'next/link';
@@ -22,7 +21,7 @@ export default async function Home({
   const categoryId = sp?.c || '';
   const sort = sp?.sort || 'newest';
 
-  let orderBy: any = { created_at: 'desc' };
+  let orderBy: Record<string, 'asc' | 'desc'> = { created_at: 'desc' };
   switch (sort) {
     case 'oldest':
       orderBy = { created_at: 'asc' };

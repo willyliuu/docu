@@ -69,7 +69,7 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
         router.push(`/notes/${currentNoteId}`);
         router.refresh();
       }
-    } catch (err) {
+    } catch {
       if (!isAutoSave) setError('Failed to save note. Please try again.');
     } finally {
       setIsSaving(false);

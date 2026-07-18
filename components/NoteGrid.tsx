@@ -5,7 +5,14 @@ import Masonry from 'react-masonry-css';
 import { NoteCard } from './NoteCard';
 
 interface NoteGridProps {
-  notes: any[];
+  notes: {
+    id: string;
+    title: string;
+    contentSnippet: string;
+    categoryName?: string;
+    categoryColor?: string;
+    updatedAt: string;
+  }[];
 }
 
 export const NoteGrid: React.FC<NoteGridProps> = ({ notes }) => {

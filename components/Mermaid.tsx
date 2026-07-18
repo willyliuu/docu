@@ -32,10 +32,10 @@ export const Mermaid: React.FC<MermaidProps> = ({ chart }) => {
         if (isMounted && containerRef.current) {
           containerRef.current.innerHTML = svg;
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (isMounted) {
           console.error("Mermaid rendering error:", err);
-          setError(err.message || "Failed to render diagram");
+          setError(err instanceof Error ? err.message : "Failed to render diagram");
         }
       }
     };

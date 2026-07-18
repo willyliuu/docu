@@ -18,8 +18,8 @@ export async function createCategory(name: string, color: string) {
     });
     revalidatePath('/categories');
     return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') {
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return { error: 'Category name already exists' };
     }
     return { error: 'Failed to create category' };
@@ -44,8 +44,8 @@ export async function updateCategory(id: string, name: string, color: string) {
     revalidatePath('/categories');
     revalidatePath('/');
     return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') {
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return { error: 'Category name already exists' };
     }
     return { error: 'Failed to update category' };
@@ -66,7 +66,7 @@ export async function deleteCategory(id: string) {
     revalidatePath('/categories');
     revalidatePath('/');
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to delete category' };
   }
 }

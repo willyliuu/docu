@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from './Input';
-import { Button } from './Button';
 
 import { Search } from 'lucide-react';
 

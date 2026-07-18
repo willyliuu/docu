@@ -43,7 +43,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         <ReactMarkdown 
           remarkPlugins={[remarkGfm]}
           components={{
-            a: ({node, ...props}) => <span style={{ color: 'var(--primary)' }}>{props.children}</span>
+            a: ({...props}) => <span style={{ color: 'var(--primary)' }}>{props.children}</span>
           }}
         >
           {contentSnippet}

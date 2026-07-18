@@ -64,6 +64,7 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
               code({ node, inline, className, children, ...props }: any) {
                 const match = /language-(\w+)/.exec(className || '');
                 if (!inline && match) {
@@ -72,6 +73,7 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
                   }
                   return (
                     <SyntaxHighlighter
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       style={vscDarkPlus as any}
                       language={match[1]}
                       PreTag="div"
