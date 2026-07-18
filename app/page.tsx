@@ -1,95 +1,103 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { auth } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { NoteCard } from '@/components/NoteCard';
+import { NoteGrid } from '@/components/NoteGrid';
+import { SearchFilterBar } from '@/components/SearchFilterBar';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; c?: string; sort?: string }>;
+}) {
+  const session = await auth();
+  
+  if (!session?.user?.id) {
+    redirect('/login');
+  }
+
+  const sp = await searchParams;
+  const query = sp?.q || '';
+  const categoryId = sp?.c || '';
+  const sort = sp?.sort || 'newest';
+
+  let orderBy: any = { created_at: 'desc' };
+  switch (sort) {
+    case 'oldest':
+      orderBy = { created_at: 'asc' };
+      break;
+    case 'alpha_asc':
+      orderBy = { title: 'asc' };
+      break;
+    case 'alpha_desc':
+      orderBy = { title: 'desc' };
+      break;
+    case 'updated':
+      orderBy = { updated_at: 'desc' };
+      break;
+    case 'newest':
+    default:
+      orderBy = { created_at: 'desc' };
+      break;
+  }
+
+  const categories = await prisma.category.findMany({
+    where: { user_id: session.user.id },
+    orderBy: { name: 'asc' },
+  });
+
+  const notes = await prisma.note.findMany({
+    where: {
+      user_id: session.user.id,
+      ...(query && {
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { content: { contains: query, mode: 'insensitive' } },
+        ],
+      }),
+      ...(categoryId === 'uncategorized' 
+        ? { category_id: null } 
+        : categoryId 
+          ? { category_id: categoryId } 
+          : {}),
+    },
+    include: {
+      category: true,
+    },
+    orderBy,
+  });
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <div className="container" style={{ padding: '24px' }}>
+      <div className="flex justify-between items-center" style={{ marginBottom: '24px' }}>
+        <h1 style={{ margin: 0 }}>My Notes</h1>
+        <div style={{ color: 'var(--text-secondary)' }}>
+          {notes.length} {notes.length === 1 ? 'note' : 'notes'}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      <SearchFilterBar categories={categories.map(c => ({ id: c.id, name: c.name }))} />
+
+      {notes.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+          <h3 style={{ marginBottom: '16px' }}>
+            {query || categoryId ? 'No notes match your search.' : 'No notes yet. Create your first one!'}
+          </h3>
+          <Link href="/notes/new" className="btn btn-primary">
+            Create Note
+          </Link>
+        </div>
+      ) : (
+        <NoteGrid notes={notes.map(note => ({
+          id: note.id,
+          title: note.title,
+          contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
+          categoryName: note.category?.name,
+          categoryColor: note.category?.color,
+          updatedAt: note.updated_at.toISOString()
+        }))} />
+      )}
     </div>
   );
 }
