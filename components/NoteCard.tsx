@@ -25,10 +25,12 @@ export const NoteCard: React.FC<NoteCardProps> = ({
 }) => {
   return (
     <Link href={`/notes/${id}`} className="card flex-col gap-2" style={{ display: 'flex', color: 'inherit', textDecoration: 'none' }}>
-      <div className="flex justify-between items-center">
-        <h3 style={{ margin: 0 }}>{title}</h3>
+      <div className="flex justify-between" style={{ alignItems: 'flex-start', gap: '16px', marginBottom: '8px' }}>
+        <h3 style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word' }}>{title}</h3>
         {categoryName && categoryColor && (
-          <CategoryBadge name={categoryName} color={categoryColor} />
+          <div style={{ flexShrink: 0 }}>
+            <CategoryBadge name={categoryName} color={categoryColor} />
+          </div>
         )}
       </div>
       <div style={{ 
@@ -38,7 +40,12 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         maxHeight: '350px',
         overflow: 'hidden'
       }} className="markdown-preview mini-preview">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        <ReactMarkdown 
+          remarkPlugins={[remarkGfm]}
+          components={{
+            a: ({node, ...props}) => <span style={{ color: 'var(--primary)' }}>{props.children}</span>
+          }}
+        >
           {contentSnippet}
         </ReactMarkdown>
         {/* Soft fade-out gradient for long content */}
