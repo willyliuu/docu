@@ -76,7 +76,7 @@ export default async function Home({
         </div>
       </div>
 
-      <SearchFilterBar categories={categories.map(c => ({ id: c.id, name: c.name }))} />
+      <SearchFilterBar categories={categories.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name }))} />
 
       {notes.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
@@ -88,7 +88,7 @@ export default async function Home({
           </Link>
         </div>
       ) : (
-        <NoteGrid notes={notes.map(note => ({
+        <NoteGrid notes={notes.map((note: any) => ({
           id: note.id,
           title: note.title,
           contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
