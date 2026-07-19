@@ -115,7 +115,7 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
           />
         </div>
         
-        <div className="flex items-center justify-between gap-4" style={{ flexWrap: 'wrap' }}>
+        <div className="flex items-center justify-between gap-2">
           <select 
             value={categoryId} 
             onChange={(e) => setCategoryId(e.target.value)}
