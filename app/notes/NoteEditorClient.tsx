@@ -60,8 +60,10 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
       } else {
         currentNoteId = await createNote(title, content, categoryId || null);
         setNoteId(currentNoteId);
-        // Update URL silently so subsequent auto-saves don't create new notes
-        window.history.replaceState(null, '', `/notes/${currentNoteId}/edit`);
+        // Only replace state if we are NOT navigating away, otherwise it can desync router
+        if (!shouldNavigate) {
+          window.history.replaceState(null, '', `/notes/${currentNoteId}/edit`);
+        }
       }
       
       lastSavedState.current = { title, content, categoryId };
@@ -74,7 +76,6 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
 
       if (shouldNavigate) {
         router.push(`/notes/${currentNoteId}`);
-        router.refresh();
       }
     } catch {
       if (!isAutoSave) toast.error('Failed to save note. Please try again.');
