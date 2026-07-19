@@ -41,31 +41,32 @@ export default async function Home({
       break;
   }
 
-  const categories = await prisma.category.findMany({
-    where: { user_id: session.user.id },
-    orderBy: { name: 'asc' },
-  });
-
-  const notes = await prisma.note.findMany({
-    where: {
-      user_id: session.user.id,
-      ...(query && {
-        OR: [
-          { title: { contains: query, mode: 'insensitive' } },
-          { content: { contains: query, mode: 'insensitive' } },
-        ],
-      }),
-      ...(categoryId === 'uncategorized' 
-        ? { category_id: null } 
-        : categoryId 
-          ? { category_id: categoryId } 
-          : {}),
-    },
-    include: {
-      category: true,
-    },
-    orderBy,
-  });
+  const [categories, notes] = await Promise.all([
+    prisma.category.findMany({
+      where: { user_id: session.user.id },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.note.findMany({
+      where: {
+        user_id: session.user.id,
+        ...(query && {
+          OR: [
+            { title: { contains: query, mode: 'insensitive' } },
+            { content: { contains: query, mode: 'insensitive' } },
+          ],
+        }),
+        ...(categoryId === 'uncategorized' 
+          ? { category_id: null } 
+          : categoryId 
+            ? { category_id: categoryId } 
+            : {}),
+      },
+      include: {
+        category: true,
+      },
+      orderBy,
+    })
+  ]);
 
   return (
     <div className="container" style={{ padding: '24px' }}>

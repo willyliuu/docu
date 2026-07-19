@@ -12,10 +12,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     const res = await signIn('credentials', {
       redirect: false,
       email,
@@ -24,6 +26,7 @@ export default function LoginPage() {
 
     if (res?.error) {
       setError('Invalid email or password.');
+      setIsLoading(false);
     } else {
       router.push('/');
       router.refresh();
@@ -46,7 +49,9 @@ export default function LoginPage() {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Password</label>
             <Input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" />
           </div>
-          <Button type="submit" variant="primary" style={{ width: '100%', marginTop: '8px' }}>Log In</Button>
+          <Button type="submit" variant="primary" style={{ width: '100%', marginTop: '8px' }} disabled={isLoading}>
+            {isLoading ? 'Logging In...' : 'Log In'}
+          </Button>
         </form>
         
         <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--text-secondary)' }}>

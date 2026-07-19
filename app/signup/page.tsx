@@ -13,10 +13,12 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     
     try {
       const res = await fetch('/api/auth/signup', {
@@ -29,6 +31,7 @@ export default function SignupPage() {
       
       if (!res.ok) {
         setError(data.error || 'Something went wrong');
+        setIsLoading(false);
         return;
       }
       
@@ -47,6 +50,7 @@ export default function SignupPage() {
       }
     } catch {
       setError('An unexpected error occurred');
+      setIsLoading(false);
     }
   };
 
@@ -70,7 +74,9 @@ export default function SignupPage() {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Password</label>
             <Input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" minLength={8} />
           </div>
-          <Button type="submit" variant="primary" style={{ width: '100%', marginTop: '8px' }}>Sign Up</Button>
+          <Button type="submit" variant="primary" style={{ width: '100%', marginTop: '8px' }} disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Sign Up'}
+          </Button>
         </form>
         
         <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--text-secondary)' }}>
