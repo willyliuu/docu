@@ -150,3 +150,20 @@ The design system utilizes **Soft** roundedness (0.25rem / 4px). This maintains 
   - H1-H3: Geist Sans.
   - Code blocks: Background #16161e, rounded 4px, with syntax highlighting using the full accent palette (Cyan for strings, Purple for keywords, Green for comments).
 - **Chips/Tags:** Small JetBrains Mono text with #24283b background and 1px borders matching the tag's specific category color (e.g., a "React" tag has a Cyan border).
+
+
+
+1. Global Command Palette (Cmd + K)
+The Critique: Right now, navigating requires moving the mouse to the sidebar or clicking search boxes. Power users hate using the mouse. The Fix: Implement a global command menu. When the user presses Cmd + K, a beautiful frosted-glass modal pops up, allowing them to instantly search notes, jump to categories, or create new items entirely via the keyboard.
+
+2. Sleek Toast Notifications
+The Critique: We currently rely on inline red text for errors, and silent navigation for success states. It works, but it lacks emotional feedback. The Fix: Integrate a modern toast notification system (like sonner or react-hot-toast). When you save a note or delete a category, a sleek, animated pill should slide in from the bottom-right saying "Note Saved Successfully!" with a little green checkmark.
+
+3. Beautiful Empty States
+The Critique: If a user searches for a note that doesn't exist, or views a category with 0 notes, they just see a blank screen. This feels like a bug. The Fix: Design gorgeous "Empty State" components. If a search fails, show a subtle, muted icon (like a magnifying glass with a question mark) with the text: "No notes found. Try adjusting your filters."
+
+4. Shimmering Skeleton Loaders
+The Critique: When the infinite scroll triggers, it just shows text saying "Loading...". The Fix: Replace that text with Skeleton Cards. When it's fetching from the database, render 3 blank, shimmering "ghost" cards in the Masonry grid. This tricks the brain into thinking the app is loading infinitely faster.
+
+5. Perfecting the Code Block Theme
+The Critique: In your Markdown Editor, we are currently using the vscDarkPlus theme for syntax highlighting inside code blocks. It looks okay, but it doesn't perfectly match the Tokyo Night colors of the surrounding app. The Fix: Swap the syntax highlighter theme to a true Tokyo Night or Dracula theme so that the code blocks seamlessly melt into the UI without clashing.

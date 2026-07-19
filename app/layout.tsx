@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
+import { CommandPalette } from "@/components/CommandPalette";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${inter.variable} ${jbMono.variable}`}>
       <body>
+        <CommandPalette />
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
           <Navbar user={session?.user} />
           <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
