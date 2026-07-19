@@ -28,6 +28,7 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ initialNotes, query, categor
   const [hasMore, setHasMore] = useState(initialNotes.length === 24);
   const [autoLoadCount, setAutoLoadCount] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const isFetchingRef = useRef(false);
   
   const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -40,14 +41,19 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ initialNotes, query, categor
   }, [initialNotes]);
 
   const loadMore = useCallback(async () => {
-    if (isLoadingMore || !hasMore) return;
+    if (isFetchingRef.current || !hasMore) return;
     
+    isFetchingRef.current = true;
     setIsLoadingMore(true);
     try {
       const nextNotes = await fetchNotesPage(page, query, categoryId, sort);
       
       if (nextNotes.length > 0) {
-        setLocalNotes(prev => [...prev, ...nextNotes]);
+        setLocalNotes(prev => {
+          const existingIds = new Set(prev.map(n => n.id));
+          const uniqueNext = nextNotes.filter(n => !existingIds.has(n.id));
+          return [...prev, ...uniqueNext];
+        });
         setPage(p => p + 1);
         setAutoLoadCount(c => c + 1);
       }
@@ -58,9 +64,10 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ initialNotes, query, categor
     } catch (error) {
       console.error("Failed to load more notes", error);
     } finally {
+      isFetchingRef.current = false;
       setIsLoadingMore(false);
     }
-  }, [page, query, categoryId, sort, hasMore, isLoadingMore]);
+  }, [page, query, categoryId, sort, hasMore]);
 
   // Intersection Observer for Infinite Scroll (up to 2 times)
   useEffect(() => {
