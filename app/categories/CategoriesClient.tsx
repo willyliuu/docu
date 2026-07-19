@@ -5,6 +5,7 @@ import { createCategory, updateCategory, deleteCategory } from './actions';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { CategoryBadge } from '@/components/CategoryBadge';
+import { ConfirmModal } from '@/components/ConfirmModal';
 
 const PREDEFINED_COLORS = [
   '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff', 
@@ -24,6 +25,8 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
   const [color, setColor] = useState('#7aa2f7');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,10 +59,17 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     setColor(category.color);
   };
 
-  const handleDelete = async (id: string, count: number) => {
-    if (confirm(`Are you sure you want to delete this category? ${count} notes will become uncategorized.`)) {
-      await deleteCategory(id);
-      setCategories(categories.filter(c => c.id !== id));
+  const handleDeleteConfirm = async () => {
+    if (!deletingCategory) return;
+    setIsDeleting(true);
+    try {
+      await deleteCategory(deletingCategory.id);
+      setCategories(categories.filter(c => c.id !== deletingCategory.id));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+      setDeletingCategory(null);
     }
   };
 
@@ -116,11 +126,20 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
             </div>
             <div className="flex gap-2">
               <Button variant="secondary" onClick={() => handleEdit(category)}>Edit</Button>
-              <Button variant="destructive" onClick={() => handleDelete(category.id, category._count.notes)}>Delete</Button>
+              <Button variant="destructive" onClick={() => setDeletingCategory(category)}>Delete</Button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={!!deletingCategory}
+        title="Delete Category"
+        message={`Are you sure you want to delete the "${deletingCategory?.name}" category? ${deletingCategory?._count.notes} notes will become uncategorized.`}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeletingCategory(null)}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
