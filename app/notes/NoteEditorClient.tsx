@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { MarkdownEditor } from '@/components/MarkdownEditor';
 import { createNote, updateNote } from './actions';
 import { Save, ChevronLeft } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Category {
   id: string;
@@ -28,14 +29,13 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
   const [content, setContent] = useState(initialData?.content || '');
   
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState('');
   
   // Track last saved state to prevent unnecessary auto-saves
   const lastSavedState = useRef({ title: initialData?.title || '', content: initialData?.content || '', categoryId: initialData?.category_id || '' });
 
   const handleSave = useCallback(async (isAutoSave = false) => {
     if (!title.trim() || !content.trim()) {
-      if (!isAutoSave) setError('Please add a title and some content to your note.');
+      if (!isAutoSave) toast.error('Please add a title and some content to your note.');
       return;
     }
 
@@ -49,7 +49,6 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
     }
 
     setIsSaving(true);
-    if (!isAutoSave) setError('');
 
     try {
       let currentNoteId = noteId;
@@ -66,11 +65,14 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
       lastSavedState.current = { title, content, categoryId };
 
       if (!isAutoSave) {
+        toast.success('Note saved successfully!');
         router.push(`/notes/${currentNoteId}`);
         router.refresh();
+      } else {
+        toast.info('Auto-saved', { duration: 1500 });
       }
     } catch {
-      if (!isAutoSave) setError('Failed to save note. Please try again.');
+      if (!isAutoSave) toast.error('Failed to save note. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -141,8 +143,6 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
           </Button>
         </div>
       </div>
-      
-      {error && <div style={{ color: 'var(--error)', padding: '12px 24px', background: 'var(--surface)' }}>{error}</div>}
       
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <MarkdownEditor value={content} onChange={setContent} />

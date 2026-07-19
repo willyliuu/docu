@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { deleteNote } from './actions';
 import { ConfirmModal } from '@/components/ConfirmModal';
+import { toast } from 'sonner';
 
 export function DeleteNoteButton({ id }: { id: string }) {
   const router = useRouter();
@@ -15,9 +16,11 @@ export function DeleteNoteButton({ id }: { id: string }) {
     setIsDeleting(true);
     try {
       await deleteNote(id);
+      toast.success('Note deleted successfully');
       router.push('/');
     } catch (error) {
       console.error(error);
+      toast.error('Failed to delete note');
       setIsDeleting(false);
       setIsOpen(false);
     }

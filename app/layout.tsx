@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
 import { CommandPalette } from "@/components/CommandPalette";
+import { Toaster } from "sonner";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${inter.variable} ${jbMono.variable}`}>
       <body>
+        <Toaster theme="dark" position="bottom-right" richColors />
         <CommandPalette />
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
           <Navbar user={session?.user} />

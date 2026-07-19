@@ -6,6 +6,7 @@ import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { ConfirmModal } from '@/components/ConfirmModal';
+import { toast } from 'sonner';
 
 const PREDEFINED_COLORS = [
   '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff', 
@@ -24,19 +25,18 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
   const [name, setName] = useState('');
   const [color, setColor] = useState('#7aa2f7');
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [error, setError] = useState('');
   const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     if (editingId) {
       const res = await updateCategory(editingId, name, color);
       if (res.error) {
-        setError(res.error);
+        toast.error(res.error);
       } else {
+        toast.success('Category updated');
         setCategories(categories.map(c => c.id === editingId ? { ...c, name, color } : c));
         setEditingId(null);
         setName('');
@@ -45,8 +45,9 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     } else {
       const res = await createCategory(name, color);
       if (res.error) {
-        setError(res.error);
+        toast.error(res.error);
       } else {
+        toast.success('Category created');
         // Optimistic refresh, actual data fetched on server revalidate
         window.location.reload(); 
       }
@@ -64,9 +65,11 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     setIsDeleting(true);
     try {
       await deleteCategory(deletingCategory.id);
+      toast.success('Category deleted');
       setCategories(categories.filter(c => c.id !== deletingCategory.id));
     } catch (err) {
       console.error(err);
+      toast.error('Failed to delete category');
     } finally {
       setIsDeleting(false);
       setDeletingCategory(null);
@@ -79,8 +82,6 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
       
       <div className="card" style={{ marginBottom: '32px' }}>
         <h3 style={{ marginBottom: '16px' }}>{editingId ? 'Edit Category' : 'Create Category'}</h3>
-        
-        {error && <div style={{ color: 'var(--error)', marginBottom: '16px', fontSize: '14px' }}>{error}</div>}
         
         <form onSubmit={handleSubmit} className="flex gap-4 items-center">
           <Input 
