@@ -33,7 +33,9 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
   // Track last saved state to prevent unnecessary auto-saves
   const lastSavedState = useRef({ title: initialData?.title || '', content: initialData?.content || '', categoryId: initialData?.category_id || '' });
 
-  const handleSave = useCallback(async (isAutoSave = false) => {
+  const handleSave = useCallback(async (options: { isAutoSave?: boolean, shouldNavigate?: boolean } = {}) => {
+    const { isAutoSave = false, shouldNavigate = false } = options;
+
     if (!title.trim() || !content.trim()) {
       if (!isAutoSave) toast.error('Please add a title and some content to your note.');
       return;
@@ -44,7 +46,7 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
       content === lastSavedState.current.content && 
       categoryId === lastSavedState.current.categoryId
     ) {
-      if (!isAutoSave) router.push(noteId ? `/notes/${noteId}` : '/');
+      if (shouldNavigate) router.push(noteId ? `/notes/${noteId}` : '/');
       return; // Nothing changed
     }
 
@@ -64,12 +66,15 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
       
       lastSavedState.current = { title, content, categoryId };
 
-      if (!isAutoSave) {
+      if (isAutoSave) {
+        toast.info('Auto-saved', { duration: 1500 });
+      } else {
         toast.success('Note saved successfully!');
+      }
+
+      if (shouldNavigate) {
         router.push(`/notes/${currentNoteId}`);
         router.refresh();
-      } else {
-        toast.info('Auto-saved', { duration: 1500 });
       }
     } catch {
       if (!isAutoSave) toast.error('Failed to save note. Please try again.');
@@ -81,7 +86,7 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
   // Auto-save every 10 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      handleSave(true);
+      handleSave({ isAutoSave: true, shouldNavigate: false });
     }, 10000);
     return () => clearInterval(timer);
   }, [handleSave]);
@@ -91,7 +96,8 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        handleSave(false);
+        // Cmd+S should explicitly NOT navigate, just save the progress!
+        handleSave({ isAutoSave: false, shouldNavigate: false });
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
@@ -137,7 +143,7 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
             ))}
           </select>
           
-          <Button onClick={() => handleSave(false)} disabled={isSaving} className="flex items-center gap-2">
+          <Button onClick={() => handleSave({ isAutoSave: false, shouldNavigate: true })} disabled={isSaving} className="flex items-center gap-2">
             <Save size={16} />
             {isSaving ? 'Saving...' : 'Save Note'}
           </Button>
