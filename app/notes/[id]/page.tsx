@@ -8,7 +8,8 @@ import { DeleteNoteButton } from '../DeleteNoteButton';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { Edit2 } from 'lucide-react';
 import { Mermaid } from '@/components/Mermaid';
 
 type CodeProps = React.ClassAttributes<HTMLElement> & React.HTMLAttributes<HTMLElement> & { inline?: boolean; node?: unknown };
@@ -54,8 +55,8 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
           </div>
         </div>
         <div className="flex gap-2">
-          <Link href={`/notes/${note.id}/edit`} className="btn btn-secondary">
-            Edit
+          <Link href={`/notes/${note.id}/edit`} className="btn btn-ghost" title="Edit Note" style={{ padding: '0 12px', color: 'var(--primary)' }}>
+            <Edit2 size={16} />
           </Link>
           <DeleteNoteButton id={note.id} />
         </div>
@@ -74,7 +75,7 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
                   }
                   return (
                     <SyntaxHighlighter
-                      style={vscDarkPlus as { [key: string]: React.CSSProperties }}
+                      style={dracula as { [key: string]: React.CSSProperties }}
                       language={match[1]}
                       PreTag="div"
                       customStyle={{ margin: '1em 0', borderRadius: '8px', background: 'var(--bg-alt)' }}
