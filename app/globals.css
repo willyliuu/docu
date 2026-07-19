@@ -29,7 +29,11 @@
 }
 
 body {
-  background: radial-gradient(circle at top right, #1f2338, var(--bg-main) 60%);
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(circle at 0% 0%, rgba(187, 154, 247, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(125, 207, 255, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(31, 35, 56, 0.8) 0%, transparent 60%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-inter), sans-serif;
