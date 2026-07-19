@@ -6,6 +6,7 @@ import { Button } from '@/components/Button';
 import { deleteNote } from './actions';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { toast } from 'sonner';
+import { Trash2 } from 'lucide-react';
 
 export function DeleteNoteButton({ id }: { id: string }) {
   const router = useRouter();
@@ -28,8 +29,8 @@ export function DeleteNoteButton({ id }: { id: string }) {
 
   return (
     <>
-      <Button variant="destructive" onClick={() => setIsOpen(true)}>
-        Delete Note
+      <Button variant="destructive" onClick={() => setIsOpen(true)} title="Delete Note" style={{ padding: '0 12px' }}>
+        <Trash2 size={16} />
       </Button>
 
       <ConfirmModal

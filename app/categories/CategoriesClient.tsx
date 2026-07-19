@@ -7,6 +7,7 @@ import { Input } from '@/components/Input';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { toast } from 'sonner';
+import { Edit2, Trash2 } from 'lucide-react';
 
 const PREDEFINED_COLORS = [
   '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff', 
@@ -128,8 +129,12 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               </span>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => handleEdit(category)}>Edit</Button>
-              <Button variant="destructive" onClick={() => setDeletingCategory(category)}>Delete</Button>
+              <Button variant="secondary" onClick={() => handleEdit(category)} title="Edit Category" style={{ padding: '0 12px' }}>
+                <Edit2 size={16} />
+              </Button>
+              <Button variant="destructive" onClick={() => setDeletingCategory(category)} title="Delete Category" style={{ padding: '0 12px' }}>
+                <Trash2 size={16} />
+              </Button>
             </div>
           </div>
         ))}
