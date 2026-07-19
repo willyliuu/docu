@@ -65,6 +65,7 @@ export default async function Home({
         category: true,
       },
       orderBy,
+      take: 24,
     })
   ]);
 
@@ -72,9 +73,6 @@ export default async function Home({
     <div className="container" style={{ padding: '24px' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '24px' }}>
         <h1 style={{ margin: 0 }}>My Notes</h1>
-        <div style={{ color: 'var(--text-secondary)' }}>
-          {notes.length} {notes.length === 1 ? 'note' : 'notes'}
-        </div>
       </div>
 
       <SearchFilterBar categories={categories.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name }))} />
@@ -89,14 +87,19 @@ export default async function Home({
           </Link>
         </div>
       ) : (
-        <NoteGrid notes={notes.map((note: { id: string; title: string; content: string; updated_at: Date; category: { name: string; color: string } | null }) => ({
-          id: note.id,
-          title: note.title,
-          contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
-          categoryName: note.category?.name,
-          categoryColor: note.category?.color,
-          updatedAt: note.updated_at.toISOString()
-        }))} />
+        <NoteGrid 
+          initialNotes={notes.map((note: { id: string; title: string; content: string; updated_at: Date; category: { name: string; color: string } | null }) => ({
+            id: note.id,
+            title: note.title,
+            contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
+            categoryName: note.category?.name,
+            categoryColor: note.category?.color,
+            updatedAt: note.updated_at.toISOString()
+          }))} 
+          query={query}
+          categoryId={categoryId}
+          sort={sort}
+        />
       )}
     </div>
   );
