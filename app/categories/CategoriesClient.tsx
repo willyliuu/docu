@@ -83,17 +83,17 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
       <div className="card" style={{ marginBottom: '32px' }}>
         <h3 style={{ marginBottom: '16px' }}>{editingId ? 'Edit Category' : 'Create Category'}</h3>
         
-        <form onSubmit={handleSubmit} className="flex gap-4 items-center">
+        <form onSubmit={handleSubmit} className="flex gap-4 items-center flex-wrap">
           <Input 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
             placeholder="Category Name" 
             required 
             maxLength={100}
-            style={{ flex: 1 }}
+            style={{ flex: '1 1 200px', minWidth: '200px' }}
           />
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap" style={{ flex: '1 1 250px' }}>
             {PREDEFINED_COLORS.map(c => (
               <button
                 key={c}
@@ -111,14 +111,16 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
             ))}
           </div>
           
-          <Button type="submit">{editingId ? 'Save' : 'Create'}</Button>
-          {editingId && <Button type="button" variant="ghost" onClick={() => { setEditingId(null); setName(''); }}>Cancel</Button>}
+          <div className="flex gap-2" style={{ flex: '1 1 100%' }}>
+            <Button type="submit" style={{ flex: 1 }}>{editingId ? 'Save' : 'Create'}</Button>
+            {editingId && <Button type="button" variant="ghost" onClick={() => { setEditingId(null); setName(''); }} style={{ flex: 1 }}>Cancel</Button>}
+          </div>
         </form>
       </div>
 
       <div className="flex-col gap-4">
         {categories.map(category => (
-          <div key={category.id} className="card flex justify-between items-center">
+          <div key={category.id} className="card flex justify-between items-center flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <CategoryBadge name={category.name} color={category.color} />
               <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
