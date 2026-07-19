@@ -4,7 +4,7 @@ import React, { ClassAttributes, HTMLAttributes, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Mermaid } from './Mermaid';
 import { Button } from './Button';
 import { Edit3, Eye } from 'lucide-react';
@@ -75,7 +75,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange 
                   }
                   return (
                     <SyntaxHighlighter
-                      style={vscDarkPlus as { [key: string]: React.CSSProperties }}
+                      style={dracula as { [key: string]: React.CSSProperties }}
                       language={match[1]}
                       PreTag="div"
                       customStyle={{ margin: 0, borderRadius: '4px', background: 'var(--bg-alt)' }}
