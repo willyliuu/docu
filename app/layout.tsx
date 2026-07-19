@@ -25,7 +25,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${inter.variable} ${jbMono.variable}`}>
       <body>
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
           <Navbar user={session?.user} />
           <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
             {session && <Sidebar />}
