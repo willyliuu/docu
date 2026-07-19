@@ -15,10 +15,8 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="desktop-sidebar" style={{
+    <aside className="desktop-sidebar glass-panel" style={{
       width: '250px',
-      borderRight: '1px solid var(--border)',
-      backgroundColor: 'var(--bg-alt)',
       padding: '24px 16px',
       display: 'flex',
       flexDirection: 'column',

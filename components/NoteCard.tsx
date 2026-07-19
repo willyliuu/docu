@@ -55,7 +55,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           left: 0,
           right: 0,
           height: '40px',
-          background: 'linear-gradient(transparent, var(--surface))'
+          background: 'linear-gradient(transparent, rgba(36, 40, 59, 0.9))'
         }} />
       </div>
       <div style={{ fontFamily: 'var(--font-jb-mono), monospace', fontSize: '12px', color: 'var(--text-secondary)', marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>

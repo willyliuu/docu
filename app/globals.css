@@ -29,7 +29,8 @@
 }
 
 body {
-  background-color: var(--bg-main);
+  background: radial-gradient(circle at top right, #1f2338, var(--bg-main) 60%);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-inter), sans-serif;
   line-height: 1.5;
@@ -78,7 +79,8 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(125, 207, 255, 0.15);
 }
 
 input::placeholder, textarea::placeholder {
@@ -127,17 +129,22 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 14px;
+}
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn-primary {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--cyan));
   color: var(--bg-main);
+  box-shadow: 0 4px 12px rgba(125, 207, 255, 0.2);
 }
 .btn-primary:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--primary-hover), #9be4ff);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(125, 207, 255, 0.4);
 }
 
 .btn-secondary {
@@ -169,17 +176,20 @@ textarea {
 
 /* Cards */
 .card {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
+  background-color: rgba(36, 40, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(47, 53, 73, 0.7);
   border-radius: 8px;
   padding: 24px;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
-  background-color: var(--surface-hover);
-  transform: translateY(-2px);
-  border-color: var(--text-secondary);
+  background-color: rgba(41, 46, 66, 0.7);
+  transform: translateY(-4px);
+  border-color: var(--secondary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 12px rgba(187, 154, 247, 0.1);
 }
 
 /* Badges */
@@ -267,13 +277,15 @@ code, pre {
 }
 
 .modal-content {
-  background-color: var(--surface);
+  background-color: rgba(36, 40, 59, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 8px;
   padding: 24px;
   width: 90%;
   max-width: 400px;
-  border: 1px solid var(--border-focus);
-  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(187, 154, 247, 0.3);
+  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(187, 154, 247, 0.1);
 }
 
 /* Masonry Grid */
@@ -300,7 +312,15 @@ code, pre {
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border);
+  background: var(--secondary);
+}
+
+/* Glass Panels */
+.glass-panel {
+  background-color: rgba(22, 22, 30, 0.6) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(47, 53, 73, 0.7);
 }
 
 /* --- RESPONSIVE DESIGN --- */
