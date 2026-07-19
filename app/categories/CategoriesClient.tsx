@@ -7,7 +7,7 @@ import { Input } from '@/components/Input';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { toast } from 'sonner';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Plus, Check, X } from 'lucide-react';
 
 const PREDEFINED_COLORS = [
   '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff', 
@@ -25,6 +25,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
   const [categories, setCategories] = useState(initialCategories);
   const [name, setName] = useState('');
   const [color, setColor] = useState('#7aa2f7');
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -81,41 +82,120 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     <div className="container" style={{ padding: '24px' }}>
       <h1 style={{ marginBottom: '24px' }}>Manage Categories</h1>
       
-      <div className="card" style={{ marginBottom: '32px' }}>
-        <h3 style={{ marginBottom: '16px' }}>{editingId ? 'Edit Category' : 'Create Category'}</h3>
-        
-        <form onSubmit={handleSubmit} className="flex gap-4 items-center flex-wrap">
-          <Input 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
-            placeholder="Category Name" 
-            required 
-            maxLength={100}
-            style={{ flex: '1 1 200px', minWidth: '200px' }}
-          />
+      <div className="card" style={{ marginBottom: '32px', padding: '16px 24px' }}>
+        <form onSubmit={handleSubmit} className="flex gap-4 items-center flex-wrap" style={{ position: 'relative' }}>
           
-          <div className="flex gap-2 flex-wrap" style={{ flex: '1 1 250px' }}>
-            {PREDEFINED_COLORS.map(c => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setColor(c)}
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  backgroundColor: c,
-                  border: color === c ? '2px solid white' : '2px solid transparent',
-                  cursor: 'pointer'
-                }}
-              />
-            ))}
+          <div style={{ position: 'relative', flex: '1 1 300px', display: 'flex', alignItems: 'center' }}>
+            {/* Color Indicator (Trigger) */}
+            <button
+              type="button"
+              onClick={() => setShowColorPicker(!showColorPicker)}
+              title="Choose Color"
+              style={{
+                position: 'absolute',
+                left: '12px',
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                backgroundColor: color,
+                border: '2px solid rgba(255,255,255,0.2)',
+                cursor: 'pointer',
+                zIndex: 2,
+                transition: 'transform 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            />
+
+            <Input 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+              placeholder={editingId ? "Edit Category Name..." : "Create a new category..."}
+              required 
+              maxLength={100}
+              style={{ 
+                width: '100%', 
+                paddingLeft: '44px', 
+                paddingRight: '56px', 
+                height: '48px', 
+                borderRadius: '24px',
+                backgroundColor: 'rgba(22, 22, 30, 0.5)',
+                border: '1px solid var(--border-focus)',
+                fontSize: '15px'
+              }}
+            />
+
+            <Button 
+              type="submit" 
+              variant="ghost"
+              style={{ 
+                position: 'absolute', 
+                right: '4px', 
+                height: '40px', 
+                width: '40px', 
+                padding: 0, 
+                borderRadius: '50%',
+                color: 'var(--bg-main)',
+                backgroundColor: 'var(--primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              title={editingId ? 'Save Category' : 'Create Category'}
+            >
+              {editingId ? <Check size={20} /> : <Plus size={20} />}
+            </Button>
           </div>
           
-          <div className="flex gap-2" style={{ flex: '1 1 100%' }}>
-            <Button type="submit" style={{ flex: 1 }}>{editingId ? 'Save' : 'Create'}</Button>
-            {editingId && <Button type="button" variant="ghost" onClick={() => { setEditingId(null); setName(''); }} style={{ flex: 1 }}>Cancel</Button>}
-          </div>
+          {editingId && (
+            <Button 
+              type="button" 
+              variant="ghost" 
+              onClick={() => { setEditingId(null); setName(''); setShowColorPicker(false); }} 
+              style={{ padding: '0 12px' }}
+              title="Cancel Edit"
+            >
+              <X size={20} />
+            </Button>
+          )}
+
+          {/* Color Picker Popover */}
+          {showColorPicker && (
+            <div style={{
+              position: 'absolute',
+              top: '56px',
+              left: '0',
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              padding: '16px',
+              display: 'flex',
+              gap: '12px',
+              flexWrap: 'wrap',
+              width: '220px',
+              zIndex: 10,
+              boxShadow: '0 16px 32px rgba(0,0,0,0.5), 0 0 12px rgba(125, 207, 255, 0.1)',
+              animation: 'modal-pop 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}>
+              {PREDEFINED_COLORS.map(c => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => { setColor(c); setShowColorPicker(false); }}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: c,
+                    border: color === c ? '2px solid white' : '2px solid transparent',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s',
+                    transform: color === c ? 'scale(1.1)' : 'scale(1)'
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </form>
       </div>
 
