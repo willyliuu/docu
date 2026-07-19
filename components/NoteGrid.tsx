@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { NoteCard } from './NoteCard';
+import { SkeletonCard } from './SkeletonCard';
 import { fetchNotesPage } from '@/app/notes/actions';
 import { Button } from './Button';
 
@@ -113,6 +114,13 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ initialNotes, query, categor
             />
           </div>
         ))}
+        {isLoadingMore && (
+          <>
+            <div style={{ marginBottom: '24px' }}><SkeletonCard /></div>
+            <div style={{ marginBottom: '24px' }}><SkeletonCard /></div>
+            <div style={{ marginBottom: '24px' }}><SkeletonCard /></div>
+          </>
+        )}
       </Masonry>
       
       {hasMore && (
@@ -120,16 +128,13 @@ export const NoteGrid: React.FC<NoteGridProps> = ({ initialNotes, query, categor
           ref={observerTarget} 
           style={{ padding: '24px', display: 'flex', justifyContent: 'center' }}
         >
-          {autoLoadCount >= 2 ? (
+          {autoLoadCount >= 2 && !isLoadingMore && (
             <Button 
               onClick={loadMore} 
-              disabled={isLoadingMore}
               variant="secondary"
             >
-              {isLoadingMore ? 'Loading...' : 'Load More Notes'}
+              Load More Notes
             </Button>
-          ) : (
-            isLoadingMore && <div style={{ color: 'var(--text-secondary)' }}>Loading more notes...</div>
           )}
         </div>
       )}
