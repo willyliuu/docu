@@ -48,10 +48,12 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
       const res = await createCategory(name, color);
       if (res.error) {
         toast.error(res.error);
-      } else {
+      } else if (res.category) {
         toast.success('Category created');
-        // Optimistic refresh, actual data fetched on server revalidate
-        window.location.reload(); 
+        setCategories([...categories, { ...res.category, _count: { notes: 0 } }]);
+        setName('');
+        setColor('#7aa2f7');
+        setShowColorPicker(false);
       }
     }
   };

@@ -9,7 +9,7 @@ export async function createCategory(name: string, color: string) {
   if (!session?.user?.id) throw new Error('Unauthorized');
 
   try {
-    await prisma.category.create({
+    const category = await prisma.category.create({
       data: {
         name,
         color,
@@ -17,7 +17,7 @@ export async function createCategory(name: string, color: string) {
       },
     });
     revalidatePath('/categories');
-    return { success: true };
+    return { success: true, category };
   } catch (error) {
     if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return { error: 'Category name already exists' };
