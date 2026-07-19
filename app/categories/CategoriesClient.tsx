@@ -129,7 +129,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               </span>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => handleEdit(category)} title="Edit Category" style={{ padding: '0 12px' }}>
+              <Button variant="ghost" onClick={() => handleEdit(category)} title="Edit Category" style={{ padding: '0 12px', color: 'var(--primary)' }}>
                 <Edit2 size={16} />
               </Button>
               <Button variant="destructive" onClick={() => setDeletingCategory(category)} title="Delete Category" style={{ padding: '0 12px' }}>
