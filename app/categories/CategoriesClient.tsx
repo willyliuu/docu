@@ -116,7 +116,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               style={{ 
                 width: '100%', 
                 paddingLeft: '44px', 
-                paddingRight: '56px', 
+                paddingRight: '90px', 
                 height: '48px', 
                 borderRadius: '24px',
                 backgroundColor: 'rgba(22, 22, 30, 0.5)',
@@ -132,18 +132,19 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
                 position: 'absolute', 
                 right: '4px', 
                 height: '40px', 
-                width: '40px', 
-                padding: 0, 
-                borderRadius: '50%',
+                padding: '0 16px', 
+                borderRadius: '20px',
                 color: 'var(--bg-main)',
                 backgroundColor: 'var(--primary)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                fontWeight: 600,
+                fontSize: '14px'
               }}
               title={editingId ? 'Save Category' : 'Create Category'}
             >
-              {editingId ? <Check size={20} /> : <Plus size={20} />}
+              {editingId ? 'Save' : 'Create'}
             </Button>
           </div>
           
