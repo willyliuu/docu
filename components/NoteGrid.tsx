@@ -10,7 +10,7 @@ import { SkeletonCard } from "./SkeletonCard";
 interface Note {
   id: string;
   title: string;
-  contentSnippet: string;
+  content: string;
   categoryName?: string;
   categoryColor?: string;
   updatedAt: string;
@@ -113,16 +113,24 @@ export const NoteGrid: React.FC<NoteGridProps> = ({
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-        {localNotes.map((note) => (
-          <div key={note.id} style={{ marginBottom: "24px" }}>
+        {localNotes.map((note, index) => (
+          <div 
+            key={note.id} 
+            className="animate-pop-up"
+            style={{ 
+              marginBottom: "24px",
+              animationDelay: `${index * 50}ms`
+            }}
+          >
             <NoteCard
               id={note.id}
               title={note.title}
-              contentSnippet={note.contentSnippet}
+              content={note.content}
               categoryName={note.categoryName}
               categoryColor={note.categoryColor}
               updatedAt={note.updatedAt}
               isFavorite={note.isFavorite}
+              query={query}
             />
           </div>
         ))}

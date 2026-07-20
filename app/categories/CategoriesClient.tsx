@@ -5,6 +5,7 @@ import { createCategory, updateCategory, deleteCategory } from './actions';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { CategoryBadge } from '@/components/CategoryBadge';
+import { CategoryCard } from '@/components/CategoryCard';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { toast } from 'sonner';
 import { Edit2, Trash2, X } from 'lucide-react';
@@ -203,23 +204,14 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
       </div>
 
       <div className="flex-col gap-4">
-        {categories.map(category => (
-          <div key={category.id} className="card flex justify-between items-center flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <CategoryBadge name={category.name} color={category.color} />
-              <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-                {category._count.notes} notes
-              </span>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="ghost" onClick={() => handleEdit(category)} title="Edit Category" style={{ padding: '0 12px', color: 'var(--primary)' }}>
-                <Edit2 size={16} />
-              </Button>
-              <Button variant="destructive" onClick={() => setDeletingCategory(category)} title="Delete Category" style={{ padding: '0 12px' }}>
-                <Trash2 size={16} />
-              </Button>
-            </div>
-          </div>
+        {categories.map((category, index) => (
+          <CategoryCard
+            key={category.id}
+            category={category}
+            index={index}
+            onEdit={handleEdit}
+            onDelete={setDeletingCategory}
+          />
         ))}
       </div>
 

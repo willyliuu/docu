@@ -11,21 +11,23 @@ import { toggleFavorite } from '@/app/notes/actions';
 interface NoteCardProps {
   id: string;
   title: string;
-  contentSnippet: string;
+  content: string;
   categoryName?: string;
   categoryColor?: string;
   updatedAt: string;
   isFavorite?: boolean;
+  query?: string;
 }
 
 export const NoteCard: React.FC<NoteCardProps> = ({
   id,
   title,
-  contentSnippet,
+  content,
   categoryName,
   categoryColor,
   updatedAt,
-  isFavorite = false
+  isFavorite = false,
+  query = ''
 }) => {
   const [optimisticFavorite, setOptimisticFavorite] = useState(isFavorite);
 
@@ -40,10 +42,64 @@ export const NoteCard: React.FC<NoteCardProps> = ({
       setOptimisticFavorite(!newValue); // Revert on failure
     }
   };
+
+  const getHighlightedText = (text: string, highlight: string) => {
+    if (!highlight.trim()) return <span>{text}</span>;
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+    return (
+      <span>
+        {parts.map((part, i) => 
+          part.toLowerCase() === highlight.toLowerCase() ? 
+            <mark key={i} style={{ backgroundColor: 'var(--yellow)', color: '#000', padding: '0 2px', borderRadius: '2px' }}>{part}</mark> : 
+            part
+        )}
+      </span>
+    );
+  };
+
+  const renderContent = () => {
+    if (!query) {
+      return (
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            a: ({...props}) => <span style={{ color: 'var(--primary)' }}>{props.children}</span>
+          }}
+        >
+          {content.substring(0, 600) + (content.length > 600 ? '...' : '')}
+        </ReactMarkdown>
+      );
+    }
+
+    const plainText = content.replace(/[#_*~`>\[\]()]/g, ' ').replace(/\s+/g, ' ').trim();
+    const lowerPlain = plainText.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const index = lowerPlain.indexOf(lowerQuery);
+    
+    let snippet = plainText;
+    if (index !== -1) {
+      const start = Math.max(0, index - 60);
+      const end = Math.min(plainText.length, start + 300);
+      snippet = plainText.substring(start, end);
+      if (start > 0) snippet = '...' + snippet;
+      if (end < plainText.length) snippet = snippet + '...';
+    } else {
+      snippet = plainText.substring(0, 300) + (plainText.length > 300 ? '...' : '');
+    }
+
+    return (
+      <div style={{ paddingTop: '8px', lineHeight: 1.6 }}>
+        {getHighlightedText(snippet, query)}
+      </div>
+    );
+  };
+
   return (
     <Link href={`/notes/${id}`} className="card flex-col gap-2" style={{ display: 'flex', color: 'inherit', textDecoration: 'none' }}>
       <div className="flex justify-between" style={{ alignItems: 'flex-start', gap: '16px', marginBottom: '8px' }}>
-        <h3 style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word', flex: 1 }}>{title}</h3>
+        <h3 style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word', flex: 1 }}>
+          {getHighlightedText(title, query)}
+        </h3>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button
             onClick={handleToggleFavorite}
@@ -72,14 +128,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         maxHeight: '350px',
         overflow: 'hidden'
       }} className="markdown-preview mini-preview">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            a: ({...props}) => <span style={{ color: 'var(--primary)' }}>{props.children}</span>
-          }}
-        >
-          {contentSnippet}
-        </ReactMarkdown>
+        {renderContent()}
         {/* Soft fade-out gradient for long content */}
         <div style={{
           position: 'absolute',

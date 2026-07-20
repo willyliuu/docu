@@ -92,7 +92,7 @@ export default async function FavoritesPage({
           initialNotes={notes.map(note => ({
             id: note.id,
             title: note.title,
-            contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
+            content: note.content,
             categoryName: note.category?.name,
             categoryColor: note.category?.color,
             updatedAt: note.updated_at.toISOString(),
