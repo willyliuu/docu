@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { DeleteNoteButton } from '../DeleteNoteButton';
 import { FavoriteToggle } from '@/components/FavoriteToggle';
+import { DownloadNoteButton } from '@/components/DownloadNoteButton';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -59,6 +60,7 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
           <Link href={`/notes/${note.id}/history`} className="btn btn-ghost" title="View Version History" style={{ padding: '0 12px', color: 'var(--text-secondary)' }}>
             <History size={16} />
           </Link>
+          <DownloadNoteButton title={note.title} content={note.content} />
           <FavoriteToggle id={note.id} isFavorite={note.is_favorite} />
           <Link href={`/notes/${note.id}/edit`} className="btn btn-ghost" title="Edit Note" style={{ padding: '0 12px', color: 'var(--primary)' }}>
             <Edit2 size={16} />
