@@ -21,6 +21,7 @@ export const FavoriteToggle: React.FC<FavoriteToggleProps> = ({ id, isFavorite }
     try {
       await toggleFavorite(id, newValue);
     } catch (error) {
+      console.log("Error: ", error)
       setOptimisticFavorite(!newValue);
     } finally {
       setIsPending(false);
@@ -28,12 +29,12 @@ export const FavoriteToggle: React.FC<FavoriteToggleProps> = ({ id, isFavorite }
   };
 
   return (
-    <button 
+    <button
       onClick={handleToggle}
       title={optimisticFavorite ? "Remove from favorites" : "Add to favorites"}
-      style={{ 
-        background: 'none', 
-        border: 'none', 
+      style={{
+        background: 'none',
+        border: 'none',
         cursor: 'pointer',
         color: optimisticFavorite ? '#e0af68' : 'var(--text-secondary)',
         display: 'flex',

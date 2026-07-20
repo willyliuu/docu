@@ -43,26 +43,26 @@ export default async function NoteHistoryPage({ params }: { params: Promise<{ id
 
       <div className="card" style={{ padding: '32px' }}>
         <h2 style={{ fontSize: '20px', marginBottom: '24px' }}>Commit Log</h2>
-        
+
         {versions.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
             <GitCommit size={48} style={{ margin: '0 auto 16px', opacity: 0.5 }} />
             <p>No commits yet.</p>
             <p style={{ fontSize: '14px', marginTop: '8px' }}>
-              Edit your note and click "Commit" to create your first snapshot.
+              Edit your note and click &quot;Commit&quot; to create your first snapshot.
             </p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {versions.map((version) => (
-              <Link 
-                key={version.id} 
+              <Link
+                key={version.id}
                 href={`/notes/${id}/version/${version.id}`}
-                style={{ 
-                  display: 'flex', 
+                style={{
+                  display: 'flex',
                   flexDirection: 'column',
-                  padding: '16px', 
-                  border: '1px solid var(--border)', 
+                  padding: '16px',
+                  border: '1px solid var(--border)',
                   borderRadius: '8px',
                   textDecoration: 'none',
                   color: 'inherit',

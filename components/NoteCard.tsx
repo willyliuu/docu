@@ -36,6 +36,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
     try {
       await toggleFavorite(id, newValue);
     } catch (error) {
+      console.log("error: ", error)
       setOptimisticFavorite(!newValue); // Revert on failure
     }
   };
@@ -44,11 +45,11 @@ export const NoteCard: React.FC<NoteCardProps> = ({
       <div className="flex justify-between" style={{ alignItems: 'flex-start', gap: '16px', marginBottom: '8px' }}>
         <h3 style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word', flex: 1 }}>{title}</h3>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button 
+          <button
             onClick={handleToggleFavorite}
-            style={{ 
-              background: 'none', 
-              border: 'none', 
+            style={{
+              background: 'none',
+              border: 'none',
               cursor: 'pointer',
               color: optimisticFavorite ? '#e0af68' : 'var(--text-secondary)',
               padding: '4px',
@@ -64,14 +65,14 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         )}
         </div>
       </div>
-      <div style={{ 
-        color: 'var(--text-secondary)', 
-        fontSize: '14px', 
+      <div style={{
+        color: 'var(--text-secondary)',
+        fontSize: '14px',
         position: 'relative',
         maxHeight: '350px',
         overflow: 'hidden'
       }} className="markdown-preview mini-preview">
-        <ReactMarkdown 
+        <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
             a: ({...props}) => <span style={{ color: 'var(--primary)' }}>{props.children}</span>

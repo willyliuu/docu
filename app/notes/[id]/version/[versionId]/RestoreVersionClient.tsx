@@ -22,14 +22,15 @@ export default function RestoreVersionClient({ versionId, noteId }: { versionId:
       toast.success('Note restored successfully!');
       router.push(`/notes/${noteId}`);
     } catch (err) {
+      console.log("Error: ", err);
       toast.error('Failed to restore version.');
       setIsRestoring(false);
     }
   };
 
   return (
-    <Button 
-      onClick={handleRestore} 
+    <Button
+      onClick={handleRestore}
       disabled={isRestoring}
       variant="primary"
       className="flex items-center gap-2"
