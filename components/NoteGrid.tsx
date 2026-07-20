@@ -119,7 +119,7 @@ export const NoteGrid: React.FC<NoteGridProps> = ({
             className="animate-pop-up"
             style={{ 
               marginBottom: "24px",
-              animationDelay: `${index * 50}ms`
+              animationDelay: `${(index % 24) * 50}ms`
             }}
           >
             <NoteCard
