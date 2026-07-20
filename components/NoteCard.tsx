@@ -1,10 +1,12 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { CategoryBadge } from './CategoryBadge';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Clock } from 'lucide-react';
+import { Clock, Star } from 'lucide-react';
+import { toggleFavorite } from '@/app/notes/actions';
 
 interface NoteCardProps {
   id: string;
@@ -13,6 +15,7 @@ interface NoteCardProps {
   categoryName?: string;
   categoryColor?: string;
   updatedAt: string;
+  isFavorite?: boolean;
 }
 
 export const NoteCard: React.FC<NoteCardProps> = ({
@@ -21,17 +24,45 @@ export const NoteCard: React.FC<NoteCardProps> = ({
   contentSnippet,
   categoryName,
   categoryColor,
-  updatedAt
+  updatedAt,
+  isFavorite = false
 }) => {
+  const [optimisticFavorite, setOptimisticFavorite] = useState(isFavorite);
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const newValue = !optimisticFavorite;
+    setOptimisticFavorite(newValue);
+    try {
+      await toggleFavorite(id, newValue);
+    } catch (error) {
+      setOptimisticFavorite(!newValue); // Revert on failure
+    }
+  };
   return (
     <Link href={`/notes/${id}`} className="card flex-col gap-2" style={{ display: 'flex', color: 'inherit', textDecoration: 'none' }}>
       <div className="flex justify-between" style={{ alignItems: 'flex-start', gap: '16px', marginBottom: '8px' }}>
-        <h3 style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word' }}>{title}</h3>
-        {categoryName && categoryColor && (
+        <h3 style={{ margin: 0, lineHeight: 1.3, wordBreak: 'break-word', flex: 1 }}>{title}</h3>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button 
+            onClick={handleToggleFavorite}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer',
+              color: optimisticFavorite ? '#e0af68' : 'var(--text-secondary)',
+              padding: '4px',
+              display: 'flex'
+            }}
+          >
+            <Star size={18} fill={optimisticFavorite ? '#e0af68' : 'none'} />
+          </button>
+          {categoryName && categoryColor && (
           <div style={{ flexShrink: 0 }}>
             <CategoryBadge name={categoryName} color={categoryColor} />
           </div>
         )}
+        </div>
       </div>
       <div style={{ 
         color: 'var(--text-secondary)', 
@@ -60,7 +91,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
       </div>
       <div style={{ fontFamily: 'var(--font-jb-mono), monospace', fontSize: '12px', color: 'var(--text-secondary)', marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
         <Clock size={12} />
-        Updated: {new Date(updatedAt).toLocaleDateString()}
+        Updated: {new Date(updatedAt).toLocaleDateString('en-US')}
       </div>
     </Link>
   );

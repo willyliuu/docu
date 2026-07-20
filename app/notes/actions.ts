@@ -60,6 +60,46 @@ export async function deleteNote(id: string) {
   revalidatePath('/categories');
 }
 
+export async function toggleFavorite(id: string, is_favorite: boolean) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error('Unauthorized');
+
+  await prisma.note.updateMany({
+    where: {
+      id,
+      user_id: session.user.id,
+    },
+    data: {
+      is_favorite,
+    },
+  });
+
+  revalidatePath('/');
+  revalidatePath(`/notes/${id}`);
+}
+
+export async function getFavoriteNotes() {
+  const session = await auth();
+  if (!session?.user?.id) return [];
+
+  const favorites = await prisma.note.findMany({
+    where: {
+      user_id: session.user.id,
+      is_favorite: true,
+    },
+    select: {
+      id: true,
+      title: true,
+    },
+    orderBy: {
+      updated_at: 'desc'
+    }
+  });
+
+  return favorites;
+}
+
+
 export async function fetchNotesPage(page: number, query: string, categoryId: string, sort: string) {
   const session = await auth();
   if (!session?.user?.id) throw new Error('Unauthorized');
@@ -113,6 +153,7 @@ export async function fetchNotesPage(page: number, query: string, categoryId: st
     contentSnippet: note.content.substring(0, 600) + (note.content.length > 600 ? '...' : ''),
     categoryName: note.category?.name,
     categoryColor: note.category?.color,
-    updatedAt: note.updated_at.toISOString()
+    updatedAt: note.updated_at.toISOString(),
+    isFavorite: note.is_favorite
   }));
 }

@@ -6,6 +6,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { Toaster } from "sonner";
 import { auth } from "@/auth";
 
+
 export const metadata: Metadata = {
   title: "Docu - Knowledge Base",
   description: "Write it once. Find it forever.",

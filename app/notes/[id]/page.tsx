@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { DeleteNoteButton } from '../DeleteNoteButton';
+import { FavoriteToggle } from '@/components/FavoriteToggle';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -54,7 +55,8 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
             )}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          <FavoriteToggle id={note.id} isFavorite={note.is_favorite} />
           <Link href={`/notes/${note.id}/edit`} className="btn btn-ghost" title="Edit Note" style={{ padding: '0 12px', color: 'var(--primary)' }}>
             <Edit2 size={16} />
           </Link>

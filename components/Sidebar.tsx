@@ -3,13 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Library, FolderOpen, Settings, Plus } from 'lucide-react';
+import { Library, FolderOpen, Settings, Plus, Star } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   const links = [
     { name: 'My Notes', path: '/', icon: Library },
+    { name: 'Favorites', path: '/favorites', icon: Star },
     { name: 'Categories', path: '/categories', icon: FolderOpen },
     { name: 'Settings', path: '/settings', icon: Settings }
   ];
@@ -26,15 +27,15 @@ export const Sidebar: React.FC = () => {
         <Plus size={18} />
         New Note
       </Link>
-      
+
       {links.map(link => {
         const isActive = pathname === link.path;
         return (
-          <Link 
-            key={link.path} 
+          <Link
+            key={link.path}
             href={link.path}
             className="btn btn-ghost flex items-center gap-3 sidebar-link"
-            style={{ 
+            style={{
               justifyContent: 'flex-start',
               gap: '12px',
               backgroundColor: isActive ? 'var(--surface)' : 'transparent',
@@ -46,6 +47,7 @@ export const Sidebar: React.FC = () => {
           </Link>
         );
       })}
+
     </aside>
   );
 };

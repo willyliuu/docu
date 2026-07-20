@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Input } from './Input';
 
 import { Search } from 'lucide-react';
@@ -13,6 +13,7 @@ interface SearchFilterBarProps {
 export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({ categories }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [categoryId, setCategoryId] = useState(searchParams.get('c') || '');
@@ -40,11 +41,11 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({ categories }) 
         params.delete('sort');
       }
 
-      router.push(`/?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [query, categoryId, sort, router, searchParams]);
+  }, [query, categoryId, sort, router, searchParams, pathname]);
 
   return (
     <div className="flex gap-4" style={{ marginBottom: '24px', flexWrap: 'wrap' }}>

@@ -5,7 +5,7 @@ import { SearchFilterBar } from '@/components/SearchFilterBar';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-export default async function Home({
+export default async function FavoritesPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string; c?: string; sort?: string }>;
@@ -21,7 +21,7 @@ export default async function Home({
   const categoryId = sp?.c || '';
   const sort = sp?.sort || 'newest';
 
-  let orderBy: Record<string, 'asc' | 'desc'> = { created_at: 'desc' };
+  let orderBy: Record<string,'asc' | 'desc'> = { created_at: 'desc' };
   switch (sort) {
     case 'oldest':
       orderBy = { created_at: 'asc' };
@@ -49,6 +49,7 @@ export default async function Home({
     prisma.note.findMany({
       where: {
         user_id: session.user.id,
+        is_favorite: true,
         ...(query && {
           OR: [
             { title: { contains: query, mode: 'insensitive' } },
@@ -72,7 +73,7 @@ export default async function Home({
   return (
     <div className="container" style={{ padding: '24px' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '24px' }}>
-        <h1 style={{ margin: 0 }}>My Notes</h1>
+        <h1 style={{ margin: 0 }}>Favorite Notes</h1>
       </div>
 
       <SearchFilterBar categories={categories.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name }))} />
@@ -80,10 +81,10 @@ export default async function Home({
       {notes.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
           <h3 style={{ marginBottom: '16px' }}>
-            {query || categoryId ? 'No notes match your search.' : 'No notes yet. Create your first one!'}
+            {query || categoryId ? 'No favorite notes match your search.' : 'No favorite notes yet. Click the star on a note to favorite it!'}
           </h3>
-          <Link href="/notes/new" className="btn btn-primary">
-            Create Note
+          <Link href="/" className="btn btn-primary">
+            Browse All Notes
           </Link>
         </div>
       ) : (

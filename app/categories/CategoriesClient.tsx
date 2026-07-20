@@ -7,10 +7,10 @@ import { Input } from '@/components/Input';
 import { CategoryBadge } from '@/components/CategoryBadge';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { toast } from 'sonner';
-import { Edit2, Trash2, Plus, Check, X } from 'lucide-react';
+import { Edit2, Trash2, X } from 'lucide-react';
 
 const PREDEFINED_COLORS = [
-  '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff', 
+  '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff',
   '#ff9e64', '#f7768e', '#e0af68', '#73daca'
 ];
 
@@ -83,10 +83,10 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
   return (
     <div className="container" style={{ padding: '24px' }}>
       <h1 style={{ marginBottom: '24px' }}>Manage Categories</h1>
-      
+
       <div className="card" style={{ marginBottom: '32px', padding: '16px 24px' }}>
         <form onSubmit={handleSubmit} className="flex gap-4 items-center flex-wrap" style={{ position: 'relative' }}>
-          
+
           <div style={{ position: 'relative', flex: '1 1 300px', display: 'flex', alignItems: 'center' }}>
             {/* Color Indicator (Trigger) */}
             <button
@@ -109,17 +109,17 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             />
 
-            <Input 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder={editingId ? "Edit Category Name..." : "Create a new category..."}
-              required 
+              required
               maxLength={100}
-              style={{ 
-                width: '100%', 
-                paddingLeft: '44px', 
-                paddingRight: '90px', 
-                height: '48px', 
+              style={{
+                width: '100%',
+                paddingLeft: '44px',
+                paddingRight: '90px',
+                height: '48px',
                 borderRadius: '24px',
                 backgroundColor: 'rgba(22, 22, 30, 0.5)',
                 border: '1px solid var(--border-focus)',
@@ -127,14 +127,14 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               }}
             />
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               variant="ghost"
-              style={{ 
-                position: 'absolute', 
-                right: '4px', 
-                height: '40px', 
-                padding: '0 16px', 
+              style={{
+                position: 'absolute',
+                right: '4px',
+                height: '40px',
+                padding: '0 16px',
                 borderRadius: '20px',
                 color: 'var(--bg-main)',
                 backgroundColor: 'var(--primary)',
@@ -149,12 +149,12 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               {editingId ? 'Save' : 'Create'}
             </Button>
           </div>
-          
+
           {editingId && (
-            <Button 
-              type="button" 
-              variant="ghost" 
-              onClick={() => { setEditingId(null); setName(''); setShowColorPicker(false); }} 
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => { setEditingId(null); setName(''); setShowColorPicker(false); }}
               style={{ padding: '0 12px' }}
               title="Cancel Edit"
             >
