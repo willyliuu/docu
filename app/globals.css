@@ -6,11 +6,11 @@
   --surface-hover: #292e42;
   --border: #2f3549;
   --border-focus: #414868;
-  
+
   --text-primary: #c0caf5;
   --text-secondary: #565f89;
   --text-bright: #a9b1d6;
-  
+
   --primary: #7aa2f7;
   --primary-hover: #89b4fa;
   --secondary: #bb9af7;
@@ -30,7 +30,7 @@
 
 body {
   background-color: var(--bg-main);
-  background-image: 
+  background-image:
     radial-gradient(circle at 0% 0%, rgba(187, 154, 247, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 100% 100%, rgba(125, 207, 255, 0.06) 0%, transparent 40%),
     radial-gradient(circle at 100% 0%, rgba(31, 35, 56, 0.8) 0%, transparent 60%);
@@ -362,15 +362,15 @@ code, pre {
   .desktop-sidebar {
     display: none !important;
   }
-  
+
   .hidden-mobile {
     display: none !important;
   }
-  
+
   .mobile-only {
     display: flex !important;
   }
-  
+
   /* Mobile drawer styling */
   .mobile-drawer-overlay {
     position: fixed;
@@ -378,7 +378,7 @@ code, pre {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 100;
   }
-  
+
   .mobile-drawer {
     position: fixed;
     top: 0;
@@ -395,7 +395,7 @@ code, pre {
     padding: 24px 16px;
     gap: 8px;
   }
-  
+
   .mobile-drawer.open {
     transform: translateX(0);
   }
@@ -406,11 +406,11 @@ code, pre {
   .mobile-only {
     display: none !important;
   }
-  
+
   .mobile-drawer {
     display: none !important;
   }
-  
+
   .mobile-drawer-overlay {
     display: none !important;
   }
@@ -439,13 +439,13 @@ code, pre {
   .md-editor-container {
     flex-direction: column;
   }
-  
+
   .md-tab-bar {
     display: flex;
     background-color: var(--surface);
     border-bottom: 1px solid var(--border);
   }
-  
+
   .md-pane.mobile-hidden {
     display: none !important;
   }
@@ -502,10 +502,12 @@ code, pre {
   background: transparent;
   outline: none;
   width: 100%;
+  height: 36px;
   font-size: 16px;
   color: var(--text-primary);
   font-family: var(--font-inter), sans-serif;
   padding: 0;
+  padding-left: 10;
 }
 .command-palette-input::placeholder {
   color: var(--text-secondary);

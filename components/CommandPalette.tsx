@@ -33,26 +33,26 @@ export function CommandPalette() {
 
   return (
     <div className="command-palette-overlay" onClick={() => setOpen(false)}>
-      <Command 
-        className="command-palette-dialog" 
+      <Command
+        className="command-palette-dialog"
         onClick={(e) => e.stopPropagation()}
         loop
       >
         <div className="command-palette-input-wrapper">
           <Search size={18} className="command-palette-icon" />
-          <Command.Input 
+          <Command.Input
             autoFocus
-            placeholder="Search notes or jump to..." 
+            placeholder="Search notes or jump to..."
             value={search}
             onValueChange={setSearch}
             className="command-palette-input"
           />
         </div>
-        
+
         <Command.List className="command-palette-list">
           <Command.Empty className="command-palette-empty">
             No exact command found.
-            <div 
+            <div
               className="command-palette-search-fallback"
               onClick={() => runCommand(() => router.push(`/?query=${encodeURIComponent(search)}`))}
             >
