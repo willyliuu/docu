@@ -48,6 +48,33 @@ export const Sidebar: React.FC = () => {
         );
       })}
 
+      <div style={{ marginTop: 'auto' }}>
+        <button
+          onClick={() => window.dispatchEvent(new Event('open-help-modal'))}
+          className="btn btn-ghost flex items-center gap-3 sidebar-link"
+          style={{
+            width: '100%',
+            justifyContent: 'flex-start',
+            gap: '12px',
+            color: 'var(--text-secondary)',
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          <div style={{ 
+            display: 'flex', alignItems: 'center', justifyContent: 'center', 
+            width: '20px', height: '20px', 
+            border: '1px solid currentColor', 
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}>
+            ?
+          </div>
+          Shortcuts & Help
+        </button>
+      </div>
     </aside>
   );
 };

@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
 import { CommandPalette } from "@/components/CommandPalette";
+import { HelpModalClient } from "@/components/HelpModalClient";
 import { Toaster } from "sonner";
 import { auth } from "@/auth";
 
@@ -30,6 +31,7 @@ export default async function RootLayout({
       <body>
         <Toaster theme="dark" position="bottom-right" richColors />
         <CommandPalette />
+        <HelpModalClient />
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
           <Navbar user={session?.user} />
           <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
