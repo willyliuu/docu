@@ -141,6 +141,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange 
         <div className={`md-pane ${activeTab === 'preview' ? 'mobile-hidden' : ''}`} style={{ borderRight: '1px solid var(--border)' }}>
           <textarea
             ref={textareaRef}
+            spellCheck={false}
             value={displayValue}
             onChange={(e) => {
               if (isLoading) return; // Prevent user edit while streaming
