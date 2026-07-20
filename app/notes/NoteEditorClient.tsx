@@ -198,49 +198,54 @@ export default function NoteEditorClient({
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            style={{
-              backgroundColor: "var(--surface)",
-              border: "1px solid var(--border)",
-              color: "var(--text-primary)",
-              borderRadius: "8px",
-              padding: "10px 14px",
-              outline: "none",
-              maxWidth: "250px",
-            }}
-          >
-            <option value="">No Category</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-
-          {noteId && (
-            <Button
-              variant="secondary"
-              onClick={() => setIsCommitModalOpen(true)}
-              className="flex items-center gap-2"
-              title="Save a snapshot of this note to history"
+          <div className="flex items-center gap-4">
+            <select
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              style={{
+                backgroundColor: "var(--surface)",
+                border: "1px solid var(--border)",
+                color: "var(--text-primary)",
+                borderRadius: "8px",
+                padding: "10px 14px",
+                outline: "none",
+                maxWidth: "250px",
+              }}
             >
-              <GitCommit size={16} />
-              Commit
-            </Button>
-          )}
+              <option value="">No Category</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <div id="ai-toolbar-portal-target" />
+          </div>
 
-          <Button
-            onClick={() =>
-              handleSave({ isAutoSave: false, shouldNavigate: true })
-            }
-            disabled={isSaving}
-            className="flex items-center gap-2"
-          >
-            <Save size={16} />
-            {isSaving ? "Saving..." : "Save Note"}
-          </Button>
+          <div className="flex items-center gap-2">
+            {noteId && (
+              <Button
+                variant="secondary"
+                onClick={() => setIsCommitModalOpen(true)}
+                className="flex items-center gap-2"
+                title="Save a snapshot of this note to history"
+              >
+                <GitCommit size={16} />
+                Commit
+              </Button>
+            )}
+
+            <Button
+              onClick={() =>
+                handleSave({ isAutoSave: false, shouldNavigate: true })
+              }
+              disabled={isSaving}
+              className="flex items-center gap-2"
+            >
+              <Save size={16} />
+              {isSaving ? "Saving..." : "Save Note"}
+            </Button>
+          </div>
         </div>
       </div>
 

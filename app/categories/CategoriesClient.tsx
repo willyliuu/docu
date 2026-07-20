@@ -4,11 +4,10 @@ import React, { useState } from 'react';
 import { createCategory, updateCategory, deleteCategory } from './actions';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
-import { CategoryBadge } from '@/components/CategoryBadge';
 import { CategoryCard } from '@/components/CategoryCard';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { toast } from 'sonner';
-import { Edit2, Trash2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const PREDEFINED_COLORS = [
   '#7aa2f7', '#bb9af7', '#9ece6a', '#7dcfff',

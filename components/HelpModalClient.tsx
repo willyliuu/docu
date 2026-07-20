@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Keyboard, X, Command, Edit3, FileText } from 'lucide-react';
+import { Keyboard, X, Command, Edit3, FileText, Sparkles } from 'lucide-react';
 
-type Tab = 'global' | 'editor' | 'markdown';
+type Tab = 'global' | 'editor' | 'markdown' | 'ai';
 
 export function HelpModalClient() {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,6 +115,12 @@ export function HelpModalClient() {
               icon={<FileText size={18} />} 
               label="Markdown Guide" 
             />
+            <TabButton 
+              active={activeTab === 'ai'} 
+              onClick={() => setActiveTab('ai')} 
+              icon={<Sparkles size={18} />} 
+              label="AI Ghostwriter" 
+            />
           </div>
 
           {/* RIGHT COLUMN: CONTENT */}
@@ -122,6 +128,7 @@ export function HelpModalClient() {
             {activeTab === 'global' && <GlobalShortcuts />}
             {activeTab === 'editor' && <EditorShortcuts />}
             {activeTab === 'markdown' && <MarkdownGuide />}
+            {activeTab === 'ai' && <AIGuide />}
           </div>
         </div>
       </div>
@@ -354,20 +361,52 @@ function MarkdownGuide() {
 
 function ShortcutRow({ shortcut, description }: { shortcut: string, description: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', backgroundColor: 'var(--bg-alt)', borderRadius: '8px' }}>
-      <span style={{ color: 'var(--text-primary)' }}>{description}</span>
-      <kbd style={{ 
-        backgroundColor: 'var(--surface)', 
+    <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '16px', alignItems: 'center', fontSize: '14px' }}>
+      <kbd style={{
+        backgroundColor: 'var(--bg-main)',
         border: '1px solid var(--border)',
+        borderRadius: '4px',
         padding: '4px 8px',
-        borderRadius: '6px',
         fontFamily: 'var(--font-jb-mono), monospace',
-        fontSize: '12px',
-        color: 'var(--text-bright)',
-        boxShadow: '0 2px 0 var(--border)'
+        display: 'inline-block',
+        textAlign: 'center'
       }}>
         {shortcut}
       </kbd>
+      <span style={{ color: 'var(--text-secondary)' }}>{description}</span>
+    </div>
+  );
+}
+
+function AIGuide() {
+  return (
+    <div>
+      <h3 style={{ marginBottom: '24px' }}>AI Ghostwriter</h3>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
+        Docu includes an AI assistant that can help you write and edit your notes directly within the editor.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div>
+          <h4 style={{ marginBottom: '8px' }}>How to use it</h4>
+          <ol style={{ paddingLeft: '20px', color: 'var(--text-secondary)' }}>
+            <li>Open any note in the editor.</li>
+            <li>Highlight the text you want the AI to process using your mouse or keyboard.</li>
+            <li>The AI Toolbar at the top of the editor (next to the category dropdown) will light up and become active.</li>
+            <li>Click one of the available actions in the top toolbar, and watch the AI stream the response!</li>
+          </ol>
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: '8px' }}>Available Actions</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <ShortcutRow shortcut="✨ Summarize" description="Condense the highlighted text into a short summary." />
+            <ShortcutRow shortcut="📝 Fix Grammar" description="Correct grammar, spelling, and punctuation." />
+            <ShortcutRow shortcut="✍️ Continue" description="Write the next logical paragraph based on the selected text." />
+            <ShortcutRow shortcut="💻 Explain" description="Explain the selected code block or concept clearly." />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
