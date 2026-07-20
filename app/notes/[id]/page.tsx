@@ -10,7 +10,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { Edit2 } from 'lucide-react';
+import { Edit2, History } from 'lucide-react';
 import { Mermaid } from '@/components/Mermaid';
 
 type CodeProps = React.ClassAttributes<HTMLElement> & React.HTMLAttributes<HTMLElement> & { inline?: boolean; node?: unknown };
@@ -56,6 +56,9 @@ export default async function ViewNotePage({ params }: { params: Promise<{ id: s
           </div>
         </div>
         <div className="flex gap-2 items-center">
+          <Link href={`/notes/${note.id}/history`} className="btn btn-ghost" title="View Version History" style={{ padding: '0 12px', color: 'var(--text-secondary)' }}>
+            <History size={16} />
+          </Link>
           <FavoriteToggle id={note.id} isFavorite={note.is_favorite} />
           <Link href={`/notes/${note.id}/edit`} className="btn btn-ghost" title="Edit Note" style={{ padding: '0 12px', color: 'var(--primary)' }}>
             <Edit2 size={16} />

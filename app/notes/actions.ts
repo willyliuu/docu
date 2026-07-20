@@ -157,3 +157,66 @@ export async function fetchNotesPage(page: number, query: string, categoryId: st
     isFavorite: note.is_favorite
   }));
 }
+
+export async function commitNoteVersion(noteId: string, title: string, content: string, commitMessage: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error('Unauthorized');
+
+  // Verify the note belongs to the user
+  const note = await prisma.note.findFirst({
+    where: { id: noteId, user_id: session.user.id }
+  });
+
+  if (!note) throw new Error('Note not found or unauthorized');
+
+  await prisma.noteVersion.create({
+    data: {
+      note_id: noteId,
+      title,
+      content,
+      commit_message: commitMessage,
+    }
+  });
+
+  revalidatePath(`/notes/${noteId}`);
+  revalidatePath(`/notes/${noteId}/history`);
+  return { success: true };
+}
+
+export async function restoreNoteVersion(versionId: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error('Unauthorized');
+
+  // Find the version and verify ownership through the note
+  const version = await prisma.noteVersion.findUnique({
+    where: { id: versionId },
+    include: { note: true }
+  });
+
+  if (!version || version.note.user_id !== session.user.id) {
+    throw new Error('Version not found or unauthorized');
+  }
+
+  // Restore the note content and title
+  await prisma.note.update({
+    where: { id: version.note_id },
+    data: {
+      title: version.title,
+      content: version.content
+    }
+  });
+
+  // Optionally, automatically commit this restoration
+  await prisma.noteVersion.create({
+    data: {
+      note_id: version.note_id,
+      title: version.title,
+      content: version.content,
+      commit_message: `Restored from version: ${version.commit_message}`,
+    }
+  });
+
+  revalidatePath(`/notes/${version.note_id}`);
+  revalidatePath(`/notes/${version.note_id}/history`);
+  return { success: true, noteId: version.note_id };
+}

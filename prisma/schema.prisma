@@ -44,6 +44,20 @@ model Note {
   is_favorite Boolean   @default(false)
   user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   category    Category? @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  versions    NoteVersion[]
 
   @@map("notes")
+}
+
+model NoteVersion {
+  id             String   @id @default(uuid()) @db.Uuid
+  note_id        String   @db.Uuid
+  title          String   @db.VarChar(255)
+  content        String
+  commit_message String   @db.VarChar(255)
+  created_at     DateTime @default(now()) @db.Timestamp(6)
+
+  note Note @relation(fields: [note_id], references: [id], onDelete: Cascade)
+  
+  @@map("note_versions")
 }

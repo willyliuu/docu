@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { MarkdownEditor } from '@/components/MarkdownEditor';
-import { createNote, updateNote } from './actions';
-import { Save, ChevronLeft } from 'lucide-react';
+import { createNote, updateNote, commitNoteVersion } from './actions';
+import { Save, ChevronLeft, GitCommit } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Category {
@@ -29,6 +29,9 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
   const [content, setContent] = useState(initialData?.content || '');
   
   const [isSaving, setIsSaving] = useState(false);
+  const [isCommitModalOpen, setIsCommitModalOpen] = useState(false);
+  const [commitMessage, setCommitMessage] = useState('');
+  const [isCommitting, setIsCommitting] = useState(false);
   
   // Track last saved state to prevent unnecessary auto-saves
   const lastSavedState = useRef({ title: initialData?.title || '', content: initialData?.content || '', categoryId: initialData?.category_id || '' });
@@ -83,6 +86,33 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
       setIsSaving(false);
     }
   }, [title, content, categoryId, noteId, router]);
+
+  const handleCommit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!commitMessage.trim()) {
+      toast.error('Commit message is mandatory');
+      return;
+    }
+    if (!noteId) {
+      toast.error('Please save the note first before committing a version.');
+      return;
+    }
+    setIsCommitting(true);
+    try {
+      // Save current state first
+      await updateNote(noteId, title, content, categoryId || null);
+      // Then commit
+      await commitNoteVersion(noteId, title, content, commitMessage);
+      toast.success('Version committed successfully!');
+      setIsCommitModalOpen(false);
+      setCommitMessage('');
+    } catch (err) {
+      toast.error('Failed to commit version.');
+    } finally {
+      setIsCommitting(false);
+    }
+  };
+
 
   // Auto-save every 10 seconds
   useEffect(() => {
@@ -144,6 +174,18 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
             ))}
           </select>
           
+          {noteId && (
+            <Button 
+              variant="secondary" 
+              onClick={() => setIsCommitModalOpen(true)} 
+              className="flex items-center gap-2"
+              title="Save a snapshot of this note to history"
+            >
+              <GitCommit size={16} />
+              Commit
+            </Button>
+          )}
+          
           <Button onClick={() => handleSave({ isAutoSave: false, shouldNavigate: true })} disabled={isSaving} className="flex items-center gap-2">
             <Save size={16} />
             {isSaving ? 'Saving...' : 'Save Note'}
@@ -154,6 +196,37 @@ export default function NoteEditorClient({ initialData, categories }: NoteEditor
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <MarkdownEditor value={content} onChange={setContent} />
       </div>
+
+      {/* Commit Modal */}
+      {isCommitModalOpen && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="card" style={{ width: '400px', maxWidth: '90vw' }}>
+            <h2 style={{ marginTop: 0 }}>Commit Version</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '16px' }}>
+              Create a snapshot of this note to track your progress and changes.
+            </p>
+            <form onSubmit={handleCommit}>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '14px', marginBottom: '8px' }}>Commit Message *</label>
+                <Input 
+                  autoFocus
+                  placeholder="e.g., Drafted v1 of API specs" 
+                  value={commitMessage}
+                  onChange={(e) => setCommitMessage(e.target.value)}
+                  style={{ width: '100%' }}
+                  required
+                />
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button type="button" variant="ghost" onClick={() => setIsCommitModalOpen(false)}>Cancel</Button>
+                <Button type="submit" variant="primary" disabled={isCommitting || !commitMessage.trim()}>
+                  {isCommitting ? 'Committing...' : 'Commit'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
