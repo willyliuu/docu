@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Library, FolderOpen, Settings, Plus, Star, Code } from 'lucide-react';
+import { Library, FolderOpen, Settings, Plus, Star, Code, Terminal } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
@@ -24,6 +24,11 @@ export const Sidebar: React.FC = () => {
       flexDirection: 'column',
       gap: '8px'
     }}>
+      <div className="flex items-center gap-2" style={{ padding: '0 8px 16px 8px', marginBottom: '8px', borderBottom: '1px solid var(--border)' }}>
+        <Terminal size={24} color="var(--primary)" />
+        <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-bright)' }}>Docu</span>
+      </div>
+
       <Link href="/notes/new" className="btn btn-primary flex items-center gap-2" style={{ marginBottom: '16px' }}>
         <Plus size={18} />
         New Note

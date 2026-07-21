@@ -32,10 +32,10 @@ export default async function RootLayout({
         <Toaster theme="dark" position="bottom-right" richColors />
         <CommandPalette />
         <HelpModalClient />
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-          <Navbar user={session?.user} />
-          <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-            {session && <Sidebar />}
+        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+          {session && <Sidebar />}
+          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+            {session && <Navbar user={session.user} />}
             <main style={{ flex: 1, overflowY: 'auto' }}>
               {children}
             </main>

@@ -26,9 +26,13 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '16px 24px',
-        borderBottom: '1px solid var(--border)',
-        backgroundColor: 'var(--bg-alt)'
+        padding: '12px 24px',
+        margin: '16px 24px',
+        borderRadius: '16px',
+        backgroundColor: 'rgba(36, 40, 59, 0.8)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
       }}>
         <div className="flex items-center gap-4">
           {user && (
@@ -40,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
               <Menu size={24} />
             </button>
           )}
-          <Link href="/" className="flex items-center gap-2" style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-bright)', textDecoration: 'none' }}>
+          <Link href="/" className="flex items-center gap-2 mobile-only" style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-bright)', textDecoration: 'none' }}>
             <Terminal size={24} color="var(--primary)" />
             Docu
           </Link>
