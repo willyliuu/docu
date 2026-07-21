@@ -3,13 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Library, FolderOpen, Settings, Plus, Star } from 'lucide-react';
+import { Library, FolderOpen, Settings, Plus, Star, Code } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   const links = [
     { name: 'My Notes', path: '/', icon: Library },
+    { name: 'Sandbox', path: '/sandbox', icon: Code },
     { name: 'Favorites', path: '/favorites', icon: Star },
     { name: 'Categories', path: '/categories', icon: FolderOpen },
     { name: 'Settings', path: '/settings', icon: Settings }
