@@ -84,7 +84,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     <div className="container" style={{ padding: '24px' }}>
       <h1 style={{ marginBottom: '24px' }}>Manage Categories</h1>
 
-      <div className="card" style={{ marginBottom: '32px', padding: '16px 24px' }}>
+      <div className="card" style={{ marginBottom: '32px', padding: '16px 24px', position: 'relative', zIndex: 50 }}>
         <form onSubmit={handleSubmit} className="flex gap-4 items-center flex-wrap" style={{ position: 'relative' }}>
 
           <div style={{ position: 'relative', flex: '1 1 300px', display: 'flex', alignItems: 'center' }}>
@@ -176,7 +176,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
               gap: '12px',
               flexWrap: 'wrap',
               width: '220px',
-              zIndex: 10,
+              zIndex: 100,
               boxShadow: '0 16px 32px rgba(0,0,0,0.5), 0 0 12px rgba(125, 207, 255, 0.1)',
               animation: 'modal-pop 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
             }}>
