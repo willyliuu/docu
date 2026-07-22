@@ -100,9 +100,8 @@ export const NoteGrid: React.FC<NoteGridProps> = ({
   }, [loadMore, hasMore, isLoadingMore, autoLoadCount]);
 
   const breakpointColumnsObj = {
-    default: 4,
-    1400: 3,
-    1100: 2,
+    default: 3,
+    1200: 2,
     768: 1,
   };
 
