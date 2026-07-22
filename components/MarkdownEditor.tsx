@@ -79,6 +79,105 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange 
     setCompletion('');
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (isLoading) return;
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const spaceCount = 2;
+      const hasSelection = start !== end;
+
+      if (hasSelection) {
+        let lineStart = value.lastIndexOf('\n', start - 1);
+        lineStart = lineStart === -1 ? 0 : lineStart + 1;
+
+        let effectiveEnd = end;
+        if (effectiveEnd > start && value[effectiveEnd - 1] === '\n') {
+          effectiveEnd--;
+        }
+        let lineEnd = value.indexOf('\n', effectiveEnd);
+        if (lineEnd === -1) lineEnd = value.length;
+
+        const linesText = value.substring(lineStart, lineEnd);
+        const lines = linesText.split('\n');
+        
+        let firstLineAddedChars = 0;
+        let currentPos = lineStart;
+        let charsAddedBeforeEnd = 0;
+
+        const newLines = lines.map((line, index) => {
+          let diff = 0;
+          let newLine = line;
+
+          if (e.shiftKey) {
+            let removeCount = 0;
+            if (line.startsWith('  ')) removeCount = 2;
+            else if (line.startsWith(' ')) removeCount = 1;
+            
+            diff = -removeCount;
+            newLine = line.substring(removeCount);
+          } else {
+            diff = spaceCount;
+            newLine = ' '.repeat(spaceCount) + line;
+          }
+
+          if (index === 0) firstLineAddedChars = diff;
+          if (currentPos < end) charsAddedBeforeEnd += diff;
+          
+          currentPos += line.length + 1; // +1 for the '\n'
+          return newLine;
+        });
+
+        const newSelectionStart = Math.max(lineStart, start + firstLineAddedChars);
+        const newSelectionEnd = Math.max(newSelectionStart, end + charsAddedBeforeEnd);
+        const newLinesText = newLines.join('\n');
+        const newValue = value.substring(0, lineStart) + newLinesText + value.substring(lineEnd);
+        
+        onChange(newValue);
+        
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = newSelectionStart;
+            textareaRef.current.selectionEnd = newSelectionEnd;
+          }
+        }, 0);
+      } else {
+        // No selection
+        if (e.shiftKey) {
+          const textBeforeCursor = value.substring(0, start);
+          let removeCount = 0;
+          if (textBeforeCursor.endsWith('  ')) removeCount = 2;
+          else if (textBeforeCursor.endsWith(' ')) removeCount = 1;
+
+          if (removeCount > 0) {
+            const newValue = textBeforeCursor.substring(0, textBeforeCursor.length - removeCount) + value.substring(end);
+            onChange(newValue);
+            setTimeout(() => {
+              if (textareaRef.current) {
+                textareaRef.current.selectionStart = start - removeCount;
+                textareaRef.current.selectionEnd = start - removeCount;
+              }
+            }, 0);
+          }
+        } else {
+          const spaces = ' '.repeat(spaceCount);
+          const newValue = value.substring(0, start) + spaces + value.substring(end);
+          onChange(newValue);
+          setTimeout(() => {
+            if (textareaRef.current) {
+              textareaRef.current.selectionStart = start + spaceCount;
+              textareaRef.current.selectionEnd = start + spaceCount;
+            }
+          }, 0);
+        }
+      }
+    }
+  };
+
   // Determine what to show in the textarea
   const displayValue = (isLoading && selection) 
     ? value.substring(0, selection.start) + completion + value.substring(selection.end)
@@ -147,6 +246,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange 
               if (isLoading) return; // Prevent user edit while streaming
               onChange(e.target.value);
             }}
+            onKeyDown={handleKeyDown}
             onMouseUp={handleMouseUp}
             onKeyUp={handleMouseUp}
             readOnly={isLoading}
